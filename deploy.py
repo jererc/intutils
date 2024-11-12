@@ -13,13 +13,21 @@ LIB_PATHS = [
 ]
 APP_PATHS = [
     '~/data/code/bfshuffle',
+    '~/data/code/intutils',
     '~/data/code/itemz/itemz',
     '~/data/code/savegame/savegame',
 ]
 DEPLOY_PATH = '~/MEGA/data/code'
 
 
+def makedirs(x):
+    if not os.path.exists(x):
+        os.makedirs(x)
+
+
 def get_file_hash(file, encoding='utf-8'):
+    if not os.path.exists(file):
+        return None
     with open(file, 'r') as fd:
         return hashlib.md5(fd.read().encode(encoding)).hexdigest()
 
@@ -71,6 +79,7 @@ def deploy():
         src_path = os.path.expanduser(src_path)
         dst_path = os.path.join(os.path.expanduser(DEPLOY_PATH),
             os.path.basename(src_path))
+        makedirs(dst_path)
         for src_file in sorted(list_py_files(src_path)):
             rel_path = os.path.relpath(src_file, src_path)
             dst_file = os.path.join(dst_path, rel_path)
