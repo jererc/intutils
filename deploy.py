@@ -1,4 +1,5 @@
 #!/bin/env python3
+import argparse
 from glob import glob
 import hashlib
 import os
@@ -91,18 +92,56 @@ def deploy():
                 print_row('', dst_file, 'missing at source')
 
 
-def check_repos():
+def get_git_branch(path):
+    try:
+        return subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+            stderr=subprocess.STDOUT, cwd=path).strip().decode('utf-8')
+    except subprocess.CalledProcessError:
+        return None
+
+
+def get_changes_to_commit(path):
+    try:
+        res = subprocess.check_output(
+            ['git', 'status', '--porcelain'],
+            stderr=subprocess.STDOUT, cwd=path).decode('utf-8')
+        return [r.strip() for r in res.splitlines()]
+    except subprocess.CalledProcessError:
+        return False  # Not in a Git repository or other error
+
+
+def check_repos(commit=False, branch='main'):
     for path in APP_PATHS:
+        path = os.path.expanduser(path)
         print('-' * 80)
         print(path)
-        subprocess.check_call(['git', 'status'],
-            cwd=os.path.expanduser(path))
+        # subprocess.check_call(['git', 'status'], cwd=path)
+        if commit:
+            if get_git_branch(path) != branch:
+                print(f'not on branch {branch}')
+                continue
+            changes = get_changes_to_commit(path)
+            if not changes:
+                print(f'nothing to commit')
+                continue
+            print("\n".join(changes))
+            subprocess.check_call(['git', 'commit', '-am', 'update'], cwd=path)
+            # subprocess.check_call(['git', 'push', 'origin', branch], cwd=path)
+
+
+
+def _parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--commit', '-c', action='store_true')
+    return parser.parse_args()
 
 
 def main():
+    args = _parse_args()
     copy_libs()
     deploy()
-    check_repos()
+    check_repos(commit=args.commit)
 
 
 if __name__ == '__main__':
