@@ -110,7 +110,7 @@ def get_changes_to_commit(path):
             stderr=subprocess.STDOUT, cwd=path).decode('utf-8')
         return [r.strip() for r in res.splitlines()]
     except subprocess.CalledProcessError:
-        return False  # Not in a Git repository or other error
+        return False
 
 
 def update_repos(commit=False, branch='main'):
