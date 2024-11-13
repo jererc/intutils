@@ -74,12 +74,14 @@ def copy_libs():
 
 
 def deploy():
+    deploy_path = os.path.expanduser(DEPLOY_PATH)
+    if not os.path.exists(deploy_path):
+        raise Exception(f'deploy path {deploy_path} does not exist')
     print('-' * 80)
     print_row('src', 'dst', 'deploy status')
     for src_path in APP_PATHS:
         src_path = os.path.expanduser(src_path)
-        dst_path = os.path.join(os.path.expanduser(DEPLOY_PATH),
-            os.path.basename(src_path))
+        dst_path = os.path.join(deploy_path, os.path.basename(src_path))
         makedirs(dst_path)
         for src_file in sorted(list_py_files(src_path)):
             rel_path = os.path.relpath(src_file, src_path)
