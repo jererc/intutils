@@ -132,14 +132,10 @@ def update_repos(commit=False, branch='main'):
         subprocess.check_call(['git', 'push', 'origin', branch], cwd=path)
 
 
-def _parse_args():
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--commit', '-c', action='store_true')
-    return parser.parse_args()
-
-
-def main():
-    args = _parse_args()
+    args = parser.parse_args()
     copy_libs()
     deploy()
     update_repos(commit=args.commit)
