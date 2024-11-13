@@ -125,9 +125,9 @@ def check_repos(commit=False, branch='main'):
             if not changes:
                 print(f'nothing to commit')
                 continue
-            print("\n".join(changes))
+            print('\n'.join(changes))
             subprocess.check_call(['git', 'commit', '-am', 'update'], cwd=path)
-            # subprocess.check_call(['git', 'push', 'origin', branch], cwd=path)
+            subprocess.check_call(['git', 'push', 'origin', branch], cwd=path)
 
 
 
