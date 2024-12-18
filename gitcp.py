@@ -4,24 +4,22 @@ import os
 import re
 import subprocess
 
-pattern = r'(version=[\'"])([^\'"]+)([\'"])'
 
 version = datetime.now().strftime('%Y.%m.%d.%H%M%S')
-print(f'{version=}')
 
-with open('setup.py', 'r', encoding='utf-8') as fd:
-    content = fd.read()
+setup_file = os.path.join(os.getcwd(), 'setup.py')
+if os.path.exists(setup_file):
+    pattern = r'(version=[\'"])([^\'"]+)([\'"])'
+    with open(setup_file, 'r', encoding='utf-8') as fd:
+        content = fd.read()
+    res = re.search(pattern, content)
+    content = re.sub(pattern, f'{res.group(1)}{version}{res.group(3)}', content)
+    with open(setup_file, 'w', encoding='utf-8') as fd:
+        fd.write(content)
 
-res = re.search(pattern, content)
-content = re.sub(pattern, f'{res.group(1)}{version}{res.group(3)}', content)
-print(content)
-
-with open('setup.py', 'w', encoding='utf-8') as fd:
-    fd.write(content)
-
-subprocess.check_call(['git', 'diff'])
+subprocess.check_call(['git', '--no-pager', 'diff'])
 user_input = input('Do you want to commit? (yes/no): ').strip().lower()
 if user_input in ['yes', 'y', '']:
     subprocess.check_call(['git', 'commit', '-am', 'do epic things'])
-    subprocess.check_call(['git', 'push', 'origin', 'main'])
-
+    subprocess.check_call(['git', 'push'])
+    print(f'{version=}')
