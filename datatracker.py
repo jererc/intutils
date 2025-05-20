@@ -6,6 +6,7 @@ from pathlib import PurePath
 from pprint import pprint
 import re
 import string
+import sys
 import time
 
 
@@ -71,7 +72,7 @@ class DataTracker:
             }))
 
     def _iterate_root_paths(self):
-        if os.name == 'nt':
+        if sys.platform == 'win32':
             for drive in string.ascii_uppercase:
                 path = f'{drive}:\\'
                 if os.path.exists(path):

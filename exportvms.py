@@ -2,13 +2,12 @@ from datetime import datetime
 import os
 import re
 import subprocess
+import sys
 import time
 
 
-BIN_PATH = {
-    'nt': r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',
-    'posix': '/usr/bin/VBoxManage',
-}[os.name]
+BIN_PATH = {'win32': r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',
+            'linux': '/usr/bin/VBoxManage'}[sys.platform]
 OUTPUT_PATH = os.path.join(os.path.expanduser('~'), 'exported_vms')
 
 
