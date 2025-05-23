@@ -14,8 +14,7 @@ OUTPUT_PATH = os.path.join(os.path.expanduser('~'), 'exported_vms')
 class VMManage:
     def __init__(self, output_path=OUTPUT_PATH):
         self.output_path = output_path
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
+        os.makedirs(self.output_path, exist_ok=True)
 
     def _parse_list_output(self, stdout):
         return {r.rsplit(None, 1)[0].strip('"')

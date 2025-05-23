@@ -32,11 +32,6 @@ logging.basicConfig(level=logging.DEBUG)
 TRACKER_PARENT_EXCLUSIONS = {r'C:\Windows', r'D:\data\savegame'}
 
 
-def makedirs(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
 def walk_files(path):
     for root, dirs, files in os.walk(path):
         for file in files:
@@ -139,7 +134,7 @@ class DataTracker:
 
 
 def main():
-    makedirs(WORK_PATH)
+    os.makedirs(WORK_PATH, exist_ok=True)
     DataTracker().run(force=True)
 
 
