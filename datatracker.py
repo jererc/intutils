@@ -1,4 +1,3 @@
-from copy import deepcopy
 import json
 import logging
 import os
@@ -17,9 +16,11 @@ TRACKER_RUN_DELTA = 8 * 3600
 TRACKER_MTIME_DELTA = 7 * 24 * 3600
 TRACKER_PARENT_EXCLUSIONS = {r'C:\Windows'}
 TRACKER_EXT_EXCLUSIONS = {'.lock', '.log', '.tmp'}
-TRACKER_DIR_EXCLUSIONS = {'ASUS', 'Google', 'Intel', 'Microsoft', 'NVIDIA',
-    'NVIDIA Corporation', '$Recycle.Bin', 'OneDrive', 'OneDriveTemp',
-    'Packages'}
+TRACKER_DIR_EXCLUSIONS = {
+    'ASUS', 'Google', 'Intel', 'Microsoft', 'NVIDIA',
+    'NVIDIA Corporation', '$Recycle.Bin', 'OneDrive',
+    'OneDriveTemp', 'Packages',
+}
 TRACKER_REGEX_EXCLUSIONS = [
     re.compile(r'(cache|logs)([\W_]|$)', re.I),
 ]
@@ -121,12 +122,12 @@ class DataTracker:
                 self.modified_paths[path] = pp.name
 
         self.tracked_paths = {k: v for k, v in self.tracked_paths.items()
-            if k in input_paths}
+                              if k in input_paths}
         logger.debug(f'processed {len(self.tracked_paths.keys())}'
-            f'/{len(input_paths)} paths '
-            f'in {time.time() - start_ts:.02f} seconds')
+                     f'/{len(input_paths)} paths '
+                     f'in {time.time() - start_ts:.02f} seconds')
         new_modified_paths = {k: v for k, v in self.modified_paths.items()
-            if k not in prev_modified_paths}
+                              if k not in prev_modified_paths}
         if new_modified_paths:
             files = [os.path.join(k, v) for k, v in new_modified_paths.items()]
             logger.info(f'modified files:\n{to_json(sorted(files))}')

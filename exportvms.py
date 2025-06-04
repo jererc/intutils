@@ -18,7 +18,7 @@ class VMManage:
 
     def _parse_list_output(self, stdout):
         return {r.rsplit(None, 1)[0].strip('"')
-            for r in stdout.decode('utf-8').splitlines()}
+                for r in stdout.decode('utf-8').splitlines()}
 
     def list_all(self):
         stdout = subprocess.check_output([BIN_PATH, 'list', 'vms'])
@@ -40,7 +40,7 @@ class VMManage:
         print(f'stopping {vm}')
         try:
             subprocess.check_call([BIN_PATH,
-                'controlvm', vm, 'acpipowerbutton'])
+                                   'controlvm', vm, 'acpipowerbutton'])
             self._wait_for_stopped(vm)
         except subprocess.CalledProcessError:
             print(f'failed to stop {vm}')

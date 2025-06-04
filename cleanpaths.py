@@ -48,14 +48,14 @@ def get_new_path(path, dirname_callable=None, filename_callable=None):
     else:
         filename, ext = os.path.splitext(basename)
         return os.path.join(dirname,
-            f'{clean_filename(filename, is_dir=False)}{ext.lower()}')
+                            f'{clean_filename(filename, is_dir=False)}{ext.lower()}')
 
 
 def clean_paths(paths, dirname_callable=None, filename_callable=None,
-        dry_run=False):
+                dry_run=False):
     for path in iter_paths(paths):
         new_path = get_new_path(path, dirname_callable=dirname_callable,
-            filename_callable=filename_callable)
+                                filename_callable=filename_callable)
         if not new_path or new_path == path:
             continue
         print(f'old: {path}\nnew: {new_path}')
@@ -89,9 +89,9 @@ def main():
     else:
         dirname_callable = None
     clean_paths(paths=args.paths,
-        dirname_callable=dirname_callable,
-        filename_callable=filename_callable,
-        dry_run=args.dry_run)
+                dirname_callable=dirname_callable,
+                filename_callable=filename_callable,
+                dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
