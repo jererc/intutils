@@ -2,19 +2,20 @@ from datetime import datetime
 import os
 import re
 import subprocess
-import sys
 import time
 
 
-BIN_PATH = {'win32': r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',
-            'linux': '/usr/bin/VBoxManage'}[sys.platform]
+BIN_PATH = {'nt': r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',
+            'posix': '/usr/bin/VBoxManage',
+            }[os.name]
 OUTPUT_PATH = os.path.join(os.path.expanduser('~'), 'exported_vms')
 
 
 class VMManage:
     def __init__(self, output_path=OUTPUT_PATH):
         self.output_path = output_path
-        os.makedirs(self.output_path, exist_ok=True)
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
 
     def _parse_list_output(self, stdout):
         return {r.rsplit(None, 1)[0].strip('"')
@@ -39,8 +40,7 @@ class VMManage:
     def stop(self, vm):
         print(f'stopping {vm}')
         try:
-            subprocess.check_call([BIN_PATH,
-                                   'controlvm', vm, 'acpipowerbutton'])
+            subprocess.check_call([BIN_PATH, 'controlvm', vm, 'acpipowerbutton'])
             self._wait_for_stopped(vm)
         except subprocess.CalledProcessError:
             print(f'failed to stop {vm}')
@@ -51,15 +51,20 @@ class VMManage:
         return os.path.join(self.output_path, f'{name}-{today}.ova')
 
     def export(self, vm, file):
+        start_ts = time.time()
         print(f'exporting {vm}')
         try:
             subprocess.check_call([BIN_PATH, 'export', vm, '--output', file])
+            print(f'exported {vm} in {time.time() - start_ts:.02f} seconds')
         except subprocess.CalledProcessError:
             print(f'failed to export {vm}')
 
     def export_all(self):
         running = self.list_running()
         for vm in self.list_all():
+            if vm.startswith('test'):
+                print(f'skipping {vm}')
+                continue
             file = self._get_export_file(vm)
             if os.path.exists(file):
                 print(f'{file} already exists')

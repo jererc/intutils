@@ -74,24 +74,34 @@ def parse_args():
     return parser.parse_args()
 
 
+def _lower(x):
+    return x.lower()
+
+
+def _capitalize(x):
+    return x.title()
+
+
 def main():
     args = parse_args()
     if args.lower:
-        filename_callable = lambda x: x.lower()
+        filename_callable = _lower
     elif args.capitalize:
-        filename_callable = lambda x: x.title()
+        filename_callable = _capitalize
     else:
         filename_callable = None
     if args.lower_dir:
-        dirname_callable = lambda x: x.lower()
+        dirname_callable = _lower
     elif args.capitalize_dir:
-        dirname_callable = lambda x: x.title()
+        dirname_callable = _capitalize
     else:
         dirname_callable = None
-    clean_paths(paths=args.paths,
-                dirname_callable=dirname_callable,
-                filename_callable=filename_callable,
-                dry_run=args.dry_run)
+    clean_paths(
+        paths=args.paths,
+        dirname_callable=dirname_callable,
+        filename_callable=filename_callable,
+        dry_run=args.dry_run,
+    )
 
 
 if __name__ == '__main__':

@@ -2,10 +2,8 @@ import json
 import logging
 import os
 from pathlib import PurePath
-from pprint import pprint
 import re
 import string
-import sys
 import time
 
 
@@ -17,9 +15,8 @@ TRACKER_MTIME_DELTA = 7 * 24 * 3600
 TRACKER_PARENT_EXCLUSIONS = {r'C:\Windows'}
 TRACKER_EXT_EXCLUSIONS = {'.lock', '.log', '.tmp'}
 TRACKER_DIR_EXCLUSIONS = {
-    'ASUS', 'Google', 'Intel', 'Microsoft', 'NVIDIA',
-    'NVIDIA Corporation', '$Recycle.Bin', 'OneDrive',
-    'OneDriveTemp', 'Packages',
+    'ASUS', 'Google', 'Intel', 'Microsoft', 'NVIDIA', 'NVIDIA Corporation',
+    '$Recycle.Bin', 'OneDrive', 'OneDriveTemp', 'Packages'
 }
 TRACKER_REGEX_EXCLUSIONS = [
     re.compile(r'(cache|logs)([\W_]|$)', re.I),
@@ -29,8 +26,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-# user_settings.py
 TRACKER_PARENT_EXCLUSIONS = {r'C:\Windows', r'D:\data\savegame'}
+
+
+def makedirs(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 def walk_files(path):
@@ -68,7 +69,7 @@ class DataTracker:
             }))
 
     def _iterate_root_paths(self):
-        if sys.platform == 'win32':
+        if os.name == 'nt':
             for drive in string.ascii_uppercase:
                 path = f'{drive}:\\'
                 if os.path.exists(path):
@@ -135,7 +136,7 @@ class DataTracker:
 
 
 def main():
-    os.makedirs(WORK_PATH, exist_ok=True)
+    makedirs(WORK_PATH)
     DataTracker().run(force=True)
 
 
