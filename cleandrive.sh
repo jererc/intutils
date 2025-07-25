@@ -22,8 +22,13 @@ echo "drive usage:"
 sudo du -ah / | sort -hr | head -n 50
 
 echo "********************************************************************************"
-echo "optimizing free space..."
 echo "stopping megasync to avoid sync deactivation..."
 pkill -SIGTERM megasync
+while pgrep -x megasync >/dev/null; do sleep 1; done
+echo "optimizing free space..."
 dd if=/dev/zero of=tmpfile bs=8M ; rm tmpfile
-echo "now restart megasync manually"
+echo "megasync can be restarted now"
+
+echo "********************************************************************************"
+echo "drive usage:"
+sudo du -ah / | sort -hr | head -n 50
