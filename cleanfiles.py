@@ -1,8 +1,9 @@
 import argparse
 import os
 import re
+import unicodedata
 
-from trans import trans
+# from trans import trans
 
 
 RE_REMOVE = re.compile(r'[\n\r]+')
@@ -25,10 +26,26 @@ def iter_paths(paths):
             yield path_
 
 
+def remove_accents(text):
+    # Normalize the text to "NFD" form (decomposed)
+    normalized = unicodedata.normalize('NFD', text)
+    # Filter out all combining characters (accents, etc.)
+    without_accents = ''.join(
+        char for char in normalized
+        if unicodedata.category(char) != 'Mn'
+    )
+    return without_accents
+
+
+def remove_accents_ascii(text):
+    return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('utf-8')
+
+
 def clean(val):
     val = RE_REMOVE.sub('', val)
     val = RE_SPECIAL.sub('_', val)
-    val = trans(val)
+    # val = trans(val)
+    val = remove_accents(val)
     return RE_SPACE.sub('_', val).strip('_')
 
 
@@ -51,8 +68,7 @@ def get_new_path(path, dirname_callable=None, filename_callable=None):
                             f'{clean_filename(filename, is_dir=False)}{ext.lower()}')
 
 
-def clean_paths(paths, dirname_callable=None, filename_callable=None,
-                dry_run=False):
+def clean_paths(paths, dirname_callable=None, filename_callable=None, dry_run=False):
     for path in iter_paths(paths):
         new_path = get_new_path(path, dirname_callable=dirname_callable,
                                 filename_callable=filename_callable)

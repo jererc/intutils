@@ -1,5 +1,10 @@
 #!/bin/bash
 echo "********************************************************************************"
+echo "emptying trash..."
+rm -rf ~/.local/share/Trash/files/*
+rm -rf ~/.local/share/Trash/info/*
+
+echo "********************************************************************************"
 echo "cleaning logs..."
 sudo journalctl --vacuum-time=2d
 
