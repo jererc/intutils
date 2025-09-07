@@ -87,6 +87,8 @@ def main():
         optimize_free_space()
     get_drive_usage()
     if args.shutdown:
+        print('shutting down...')
+        time.sleep(5)
         run_command('sudo shutdown -h now', 'shutting down', shell=True)
 
 
