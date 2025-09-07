@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from contextlib import contextmanager
+import os
 import subprocess
 import sys
 import time
@@ -71,6 +72,8 @@ class MegasyncManager:
 
 
 def main():
+    if os.path.exists(TMP_FILE):
+        os.remove(TMP_FILE)
     args = get_args()
     run_command('rm -rf ~/.local/share/Trash/files/*', 'emptying trash files', shell=True)
     run_command('rm -rf ~/.local/share/Trash/info/*', 'emptying trash info', shell=True)
