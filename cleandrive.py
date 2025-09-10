@@ -75,6 +75,7 @@ def main():
     if os.path.exists(TMP_FILE):
         os.remove(TMP_FILE)
     args = get_args()
+    run_command('rm -rf ~/tmp/*', 'emptying home tmp files', shell=True)
     run_command('rm -rf ~/.local/share/Trash/files/*', 'emptying trash files', shell=True)
     run_command('rm -rf ~/.local/share/Trash/info/*', 'emptying trash info', shell=True)
     run_command('sudo journalctl --vacuum-time=2d', 'cleaning logs', shell=True)
