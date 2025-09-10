@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='intutils',
-    version='2025.09.10.162727',
+    version='2025.09.10.164339',
     author='jererc',
     author_email='jererc@gmail.com',
     url='https://github.com/jererc/intutils',
