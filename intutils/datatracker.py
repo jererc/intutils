@@ -6,7 +6,6 @@ import re
 import string
 import time
 
-
 NAME = os.path.splitext(os.path.basename(os.path.realpath(__file__)))[0]
 HOME_PATH = os.path.expanduser('~')
 WORK_PATH = os.path.join(HOME_PATH, f'.{NAME}')

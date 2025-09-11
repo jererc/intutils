@@ -3,9 +3,6 @@ import os
 import re
 import unicodedata
 
-# from trans import trans
-
-
 RE_REMOVE = re.compile(r'[\n\r]+')
 RE_SPECIAL = re.compile(r'[\t\*\:\;\?\|\"\'\<\>]+')
 RE_SPACE = re.compile(r'[\s_]+')
@@ -44,7 +41,6 @@ def remove_accents_ascii(text):
 def clean(val):
     val = RE_REMOVE.sub('', val)
     val = RE_SPECIAL.sub('_', val)
-    # val = trans(val)
     val = remove_accents(val)
     return RE_SPACE.sub('_', val).strip('_')
 
